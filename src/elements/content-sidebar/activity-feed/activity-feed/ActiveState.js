@@ -20,6 +20,7 @@ import {
     FEED_ITEM_TYPE_COMMENT,
     FEED_ITEM_TYPE_TASK,
     FEED_ITEM_TYPE_VERSION,
+    ACTION_TYPE_PROMOTED,
 } from '../../../../constants';
 import type {
     Annotation,
@@ -137,17 +138,19 @@ const ActiveState = ({
     const onReplyDeleteHandler = (parentId: string) => (options: { id: string, permissions: BoxCommentPermission }) => {
         onReplyDelete({ ...options, parentId });
     };
-    const onReplyUpdateHandler = (parentId: string) => (
-        id: string,
-        text: string,
-        status?: FeedItemStatus,
-        hasMention?: boolean,
-        permissions: BoxCommentPermission,
-        onSuccess: ?Function,
-        onError: ?Function,
-    ) => {
-        onReplyUpdate(id, parentId, text, permissions, onSuccess, onError);
-    };
+    const onReplyUpdateHandler =
+        (parentId: string) =>
+        (
+            id: string,
+            text: string,
+            status?: FeedItemStatus,
+            hasMention?: boolean,
+            permissions: BoxCommentPermission,
+            onSuccess: ?Function,
+            onError: ?Function,
+        ) => {
+            onReplyUpdate(id, parentId, text, permissions, onSuccess, onError);
+        };
     const onShowRepliesHandler = (id: string, type: CommentFeedItemType) => () => {
         onShowReplies(id, type);
     };
@@ -161,7 +164,9 @@ const ActiveState = ({
         }
     };
 
-    const hasMultipleVersions = item => item.versions || (shouldUseUAA && item.version_start !== item.version_end);
+    const hasMultipleVersions = item =>
+        item.versions ||
+        (shouldUseUAA && item.version_start !== item.version_end && item.action_type !== ACTION_TYPE_PROMOTED);
 
     return (
         <ul className="bcs-activity-feed-active-state">

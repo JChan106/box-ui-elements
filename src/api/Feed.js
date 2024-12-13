@@ -26,6 +26,7 @@ import {
     ACTION_TYPE_CREATED,
     ACTION_TYPE_RESTORED,
     ACTION_TYPE_TRASHED,
+    ACTION_TYPE_PROMOTED,
     ERROR_CODE_CREATE_TASK,
     ERROR_CODE_UPDATE_TASK,
     ERROR_CODE_GROUP_EXCEEDS_LIMIT,
@@ -250,6 +251,16 @@ export const getParsedFileActivitiesResponse = (
                             versionsItem.restored_at = versionsItem.start.restored_at;
                             versionsItem.restored_by = { ...versionsItem.start.restored_by };
                         }
+                    }
+
+                    if (
+                        versionsItem.action_type === ACTION_TYPE_PROMOTED &&
+                        versionsItem.start?.promoted_by &&
+                        versionsItem.end?.promoted_by
+                    ) {
+                        versionsItem.version_promoted = versionsItem.start.number;
+                        versionsItem.version_number = versionsItem.end.number;
+                        versionsItem.promoted_by = { ...versionsItem.end.promoted_by };
                     }
 
                     return versionsItem;
